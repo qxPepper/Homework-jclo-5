@@ -1,5 +1,6 @@
 package ru.netology.homeworkjclo5;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,14 +26,21 @@ class HomeworkJclo5ApplicationTests {
     }
 
     @Test
-    void contextLoads() {
+    void contextLoads_dev() {
         Integer devAppPort = devApp.getMappedPort(8080);
-        ResponseEntity<String> fromDevApp = restTemplate.getForEntity("http://localhost:" + devAppPort, String.class);
+        ResponseEntity<String> fromDevApp = restTemplate.getForEntity("http://localhost:" + devAppPort + "/profile", String.class);
         System.out.println("From devapp: " + fromDevApp.getBody());
 
+        Assertions.assertEquals("Current profile is dev", fromDevApp.getBody());
+    }
+
+    @Test
+    void contextLoads_prod() {
         Integer prodAppPort = prodApp.getMappedPort(8081);
-        ResponseEntity<String> fromProdApp = restTemplate.getForEntity("http://localhost:" + prodAppPort, String.class);
+        ResponseEntity<String> fromProdApp = restTemplate.getForEntity("http://localhost:" + prodAppPort + "/profile", String.class);
         System.out.println("From prodApp: " + fromProdApp.getBody());
+
+        Assertions.assertEquals("Current profile is production", fromProdApp.getBody());
     }
 
 }
